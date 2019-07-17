@@ -5,7 +5,7 @@
 <!--配置-->
 <configuration>
     <!--属性-->
-    <!--<properties></properties>-->
+<!--    <properties resource="db.properties"></properties>-->
     <!--设置-->
     <settings>
          <!-- 驼峰命令规则 -->
@@ -24,22 +24,23 @@
     <!--<plugin interceptor=""></plugin>-->
     <!--</plugins>-->
     <!--配置环境-->
-    <environments default="default">
-        <!--环境变量-->
-        <environment id="default">
-            <!--事务管理器-->
-            <transactionManager type="jdbc"/>
-            <!--数据源-->
-            <dataSource type="pooled">
-                <property name="driver" value="${jdbc.driver}"/>
-                <property name="url" value="${jdbc.url}"/>
-                <property name="username" value="${jdbc.username}"/>
-                <property name="password" value="${jdbc.password}"/>
-            </dataSource>
-        </environment>
-    </environments>
+<!--    <environments default="default">-->
+<!--        &lt;!&ndash;环境变量&ndash;&gt;-->
+<!--        <environment id="default">-->
+<!--            &lt;!&ndash;事务管理器&ndash;&gt;-->
+<!--            <transactionManager type="jdbc"/>-->
+<!--            &lt;!&ndash;数据源&ndash;&gt;-->
+<!--            <dataSource type="pooled">-->
+<!--                <property name="driver" value="${jdbc.driverClass}"/>-->
+<!--                <property name="url" value="${jdbc.jdbcUrl}"/>-->
+<!--                <property name="username" value="${jdbc.username}"/>-->
+<!--                <property name="password" value="${jdbc.password}"/>-->
+<!--            </dataSource>-->
+<!--        </environment>-->
+<!--    </environments>-->
     <!--数据库厂商标识-->
     <!--<databaseIdProvider type=""/>-->
     <!--映射器-->
-    <mappers></mappers>
+<!--    <mappers>-->
+<!--    </mappers>-->
 </configuration>
