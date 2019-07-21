@@ -20,6 +20,11 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * 列出员工信息
+     * @param pageNo
+     * @return
+     */
     @ResponseBody
     @GetMapping("/emps")
     public Msg listEmps(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo){

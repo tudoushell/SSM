@@ -51,8 +51,7 @@
                         <div class="form-group row">
                                <label class="col-sm-2 control-label">部门</label>
                                 <div class="col-sm-4">
-                                    <select class="form-control" name="dId">
-                                        <option value="1">1</option>
+                                    <select class="form-control" name="dId" id="choose-dept">
                                     </select>
                                 </div>
                         </div>
@@ -60,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">添加</button>
+                    <button type="button" class="btn btn-primary"  id="add-emp">添加</button>
                 </div>
             </div>
         </div>
@@ -131,7 +130,11 @@
            htmlStr += "<tr>";
            htmlStr += "<td>" + emp.empId + "</td>"
            htmlStr += "<td>" + emp.empName + "</td>"
-           htmlStr += "<td>" + emp.gender + "</td>"
+            if (emp.gender === "0"){
+                htmlStr += "<td>男</td>"
+            }else {
+                htmlStr += "<td>女</td>"
+            }
            htmlStr += "<td>" + emp.email + "</td>"
            htmlStr += "<td>" + emp.dept.deptName + "</td>"
            htmlStr += "<td>"
@@ -165,7 +168,7 @@
         pagination += "<li><a href='javascript:pagination(1)'>首页</a></li>"
         if (pageInfo.isFirstPage){ //是第一页
             pagination += "<li class='disabled'>"
-            pagination += "<a href='javascript:pagination(1)' aria-label='Previous'>"
+            pagination += "<a href='javascript:;' aria-label='Previous'>"
         }else {
             pagination += "<li>"
             pagination += "<a href=\"javascript:pagination('"+ (pageInfo.pageNum - 1)  +"')\"  aria-label='Previous'>"
@@ -174,15 +177,15 @@
         pagination += "</a>"
         pagination += "</li>"
         $.each(pageInfo.navigatepageNums, function (index, pageNum) {
-            if (pageNum === pageInfo.pageNum){ //当前页码为蓝色
+            if (pageNum === pageInfo.pageNum){ //当前页码为活动页码
                 pagination += "<li class=\"active\"><a href='javascript: pagination(" + pageNum + ")' >" + pageNum + "</a></li>"
-            }else { //否则不是
+            }else {
                 pagination += "<li><a href=\"javascript:pagination('" + pageNum + "')\">" + pageNum + "</a></li>"
             }
         })
         if (pageInfo.isLastPage){ //是最后一页
             pagination += "<li class=\"disabled\">"
-            pagination += " <a href=\"javascript:pagination('" + pageInfo.pages + "')\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a>"
+            pagination += " <a href=\"javascript:;\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a>"
         }else{
             pagination += "<li>"
             pagination += " <a href=\"javascript:pagination('"+ (pageInfo.pageNum + 1)  +"')\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span></a>"
@@ -193,13 +196,43 @@
         pagination += "</nav>"
         $('#navigation').append(pagination)
     }
+
     //弹出添加员工框
     $('#add_emp').click(function () {
+        //列出部门
+        $.ajax({
+            type: "Get",
+            url: "/dept/listDept",
+            dataType: "json",
+            success: function (result) {
+                var child = $("#choose-dept").children().remove()
+                $("#choose-dept").append("<option>请选择</option>")
+                var depts = result.resultMap.listDept
+                $.each(depts, function (index, dept) {
+                   var option = $("<option></option>").attr("value", dept.deptId).append(dept.deptName)
+                    $("#choose-dept").append(option)
+                })
+            }
+        })
+        //设置弹窗属性
         $('#add_emp_info').modal({
             backdrop: 'static',
         })
     })
 
+    //添加员工信息
+    $('#add-emp').click(function () {
+        let data = $('#add_emp_info form').serialize()
+        //发送ajax 请求 添加员工信息
+        $.ajax({
+            type: "POST",
+            url: " ",
+            data: data,
+            success: function (result) {
+                
+            }
+        })
+    })
 </script>
 </body>
 </html>

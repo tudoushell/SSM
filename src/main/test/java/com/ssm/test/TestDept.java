@@ -15,6 +15,11 @@ public class TestDept {
     DeptMapper deptMapper;
 
     @Test
+    public void testListDept(){
+        System.out.println(deptMapper.listDepts());
+    }
+
+    @Test
     public void testInsert(){
         Dept dept = new Dept();
         dept.setDeptName("人事部");
