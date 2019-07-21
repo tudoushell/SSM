@@ -29,10 +29,94 @@
             <property name="basePackage" value="com.ssm.dao"/>
         </bean>
 
+        <!-- 配置一个可以执行批量的sqlSession -->
+        <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+            <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+            <constructor-arg name="executorType" value="BATCH"/>
+        </bean>
+
         <!-- 事务配置 -->
         <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource"/>
         </bean>
         <tx:annotation-driven transaction-manager="transactionManager"/>
         <aop:aspectj-autoproxy/>
+
+
+        <!-- 配置shiro -->
+        <!-- 1. SecurityManager 管理器 -->
+        <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+            <property name="realms">
+                <list>
+                    <ref bean="UserRealm"></ref>
+                </list>
+            </property>
+            <!-- 注入缓存管理器 -->
+            <property name="cacheManager" ref="cacheManager"/>
+        </bean>
+        <!--
+            2.缓存管理器
+            需要加入echcahe 的jar 即配置文件
+        -->
+        <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+            <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+        </bean>
+
+        <!--
+         3.配置realm
+          实现了org.apache.shiro.realm.Realm 接口的bean
+       -->
+        <bean id="UserRealm" class="com.ssm.realms.UserRealm">
+            <!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
+            <!-- 密码加密 -->
+            <property name="credentialsMatcher">
+                <bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+                    <property name="hashAlgorithmName" value="MD5"/>
+                </bean>
+            </property>
+        </bean>
+
+    <!--
+      4. 配置lifecycleBeanPostProcessor，
+          可以自动的来调用配置在spring ioc 容器中 shiro bean 的生命周期方法
+    -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+
+    <!--
+       5. 启用 IOC 容器中使用 shiro 中的注解，但必须配置lifecycleBeanPostProcessor才可以使用
+    -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"  >
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!--
+       6. 配置shiroFilter
+       6.1 id 必须和 web.xml  文件中配置DelegatingFilterProxy的<filter-name>一致
+       6.2 若不一致，则抛出异常 NoSuchBeanDefinitionException: No bean named 'shiroFilter' available
+   -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <property name="successUrl" value="/list.jsp"/>
+        <property name="unauthorizedUrl" value="unauthorized.jsp"/>
+<!--        <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"/>-->
+        <property name="filterChainDefinitions">
+            <!--
+                配置哪些页面需要受保护
+                以及访问这些页面需要的权限
+                1). anon 可以被匿名访问
+                2). authc 必须认证(登录)之后，才能访问页面
+                3). logout：用户登出
+                4). roles: 角色过滤器
+            -->
+            <value>
+                /index.jsp = anon
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
 </beans>

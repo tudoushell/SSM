@@ -8,9 +8,45 @@
         <result property="empName" column="emp_name"/>
         <result property="gender" column="gender"/>
         <result property="email" column="email"/>
+        <result property="dId" column="d_id"/>
     </resultMap>
 
-    <select id="getEmployeeById" resultMap="EmployeeMap">
-        select * from emp where emp_id=#{id}
+    <resultMap id="EmpAndDept" type="Employee">
+        <id property="empId" column="emp_id"/>
+        <result property="empName" column="emp_name"/>
+        <result property="gender" column="gender"/>
+        <result property="email" column="email"/>
+        <result property="dId" column="d_id"/>
+        <association property="dept" javaType="Dept">
+            <id property="deptId" column="dept_id"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>
+
+    <sql id="listEmployee">
+        select
+              emp_id,
+              emp_name,
+              gender,
+              email,
+              d_id,
+              dept_id,
+              dept_name
+              from emp
+              inner join dept
+              on d_id = dept_id
+    </sql>
+
+    <select id="listEmp" resultMap="EmpAndDept">
+        <include refid="listEmployee"/>
     </select>
+
+    <select id="getEmployeeById" resultMap="EmployeeMap">
+        <include refid="listEmployee"/>
+        where emp_id=#{id}
+    </select>
+
+    <insert id="saveEmployee" parameterType="Employee">
+        insert into emp (emp_name, gender, email, d_id) values (#{empName}, #{gender}, #{email}, #{dId})
+    </insert>
 </mapper>
