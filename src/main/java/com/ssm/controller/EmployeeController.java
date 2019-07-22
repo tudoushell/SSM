@@ -54,7 +54,8 @@ public class EmployeeController {
           List<FieldError> listError = bindingResult.getFieldErrors();
             Iterator<FieldError> it = listError.iterator();
             while (it.hasNext()){
-                map.put(it.next().getField(), it.next().getDefaultMessage());
+                FieldError params = it.next();
+                map.put(params.getField(), params.getDefaultMessage());
             }
             return  Msg.fail().add("error", map);
         }else {

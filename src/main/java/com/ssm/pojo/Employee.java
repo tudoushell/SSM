@@ -3,8 +3,8 @@ package com.ssm.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Email;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
 @Data
