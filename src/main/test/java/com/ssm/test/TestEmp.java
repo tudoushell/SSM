@@ -21,7 +21,12 @@ public class TestEmp {
     @Autowired
     SqlSession sqlSession;
 
-
+    @Test
+    public void testCheckUserOrEmail(){
+        Employee employee = new Employee();
+        employee.setEmpName("tom");
+        System.out.println(employeeMapper.checkUserOrEmail(employee));
+    }
 
     @Test
     public void testListAll(){

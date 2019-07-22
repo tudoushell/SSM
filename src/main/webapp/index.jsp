@@ -12,6 +12,11 @@
     <title>员工列表</title>
     <meta charset="UTF-8">
     <link href="static/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <style>
+        #message-info{
+            display: none;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -19,6 +24,7 @@
     <div class="modal fade" tabindex="-1" role="dialog" id="add_emp_info">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+                <div class="alert alert-success" id="message-info" role="alert" >添加成功</div>
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">员工添加</h4>
@@ -28,10 +34,12 @@
                         <div class="form-group">
                             <label for="emp-name">姓名</label>
                             <input type="text" class="form-control" id="emp-name" name="empName" placeholder="姓名">
+                            <span class="help-block"></span>
                         </div>
                         <div class="form-group">
                             <label for="input-email">Email</label>
                             <input type="email" class="form-control" id="input-email" name="email" placeholder="Email">
+                            <span class="help-block"></span>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -199,6 +207,7 @@
 
     //弹出添加员工框
     $('#add_emp').click(function () {
+        clearStyle("#add_emp_info")
         //列出部门
         $.ajax({
             type: "Get",
@@ -222,17 +231,95 @@
 
     //添加员工信息
     $('#add-emp').click(function () {
+        //用户输入校验
+        if(! validateEmpInfo()){
+            return ;
+        }
+        //获取用户输入的数据
         let data = $('#add_emp_info form').serialize()
         //发送ajax 请求 添加员工信息
         $.ajax({
             type: "POST",
-            url: " ",
+            url: "/saveEmp",
             data: data,
             success: function (result) {
-                
+                if (result.code === "200"){ //添加成功
+                    $('#message-info').fadeIn(700,function () {
+                        $('#message-info').fadeOut(700,function () {
+                            $('#add_emp_info').modal('hide')
+                            pagination(999)
+                        })
+                    })
+                }else { //添加失败
+
+                }
+            }
+        })
+
+    })
+    //用户输入的数据校验
+    function validateEmpInfo(){
+
+        //用户名校验
+        var empName = $('#emp-name').val()
+        var reg = /(^[a-z0-9_-]{4,16}$)|(^[\u2E80-\u9FFF]{2,5}$)/
+        if(reg.test(empName)){
+            validateMsg("#emp-name", "success", "")
+        }else{
+            validateMsg("#emp-name", "error", "姓名格式不正确")
+            return false
+        }
+
+        //邮箱校验
+        var email = $('#input-email').val()
+        reg = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+        if (reg.test(email)){
+            validateMsg("#input-email", "success", "")
+            return true
+        }else {
+            validateMsg("#input-email", "error", "邮箱格式不正确")
+            return false
+        }
+    }
+
+    //校验返回信息
+    function validateMsg(elem, status, msg){
+        $(elem).parent().removeClass("has-success has-error")
+        if (status === "success"){
+            $(elem).parent().addClass("has-success")
+            $(elem).parent().find("span").text(msg)
+        }else{
+            $(elem).parent().addClass("has-error")
+            $(elem).parent().find("span").text(msg)
+        }
+    }
+    //用于校验用户输入的信息
+    $('#emp-name').change(function () {
+        var empName = $(this).val()
+        $.ajax({
+            type: "Get",
+            url: "/checkEmp?empName=" + empName,
+            dataType: "json",
+            success: function (result) {
+
+               // if (result.code === "500"){
+               //     validateMsg("#emp-name", "error", result.resultMap.info)
+               //     $('#add-emp').attr("disabled", true)
+               // }else{
+               //     validateMsg("#emp-name", "success", "")
+               //     $('#add-emp').attr("disabled", false)
+               // }
             }
         })
     })
+    //清除样式
+    function clearStyle(elem) {
+        //清空输入框的内容
+        $(elem).find("form")[0].reset()
+        $(elem).find("*").removeClass("has-success has-error")
+        $(elem).find("span").text("")
+    }
+
 </script>
 </body>
 </html>
