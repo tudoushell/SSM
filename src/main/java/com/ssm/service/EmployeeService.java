@@ -7,6 +7,20 @@ import java.util.List;
 public interface EmployeeService {
 
     /**
+     * 根据id 获取员工信息
+     * @param id
+     * @return
+     */
+    Employee getEmployeeById(Integer id);
+
+    /**
+     * 修改员工信息
+     * @param employee
+     * @return
+     */
+    boolean updateEmployee(Employee employee);
+
+    /**
      * 查询用户名和邮箱是否存在
      * @param employee
      * @return

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,6 +22,18 @@ import java.util.Map;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
+
+    /**
+     * 获取员工信息
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("/emp/{id}")
+    public Msg getEmpById(@PathVariable("id") Integer id){
+       Employee employee = employeeService.getEmployeeById(id);
+       return Msg.sucess().add("emp", employee);
+    }
 
     /**
      * 判断用户名或邮箱是否存在

@@ -5,6 +5,13 @@ import com.ssm.pojo.Employee;
 import java.util.List;
 
 public interface EmployeeMapper {
+
+    /**
+     * 更新员工信息
+     * @param employee
+     */
+    void updateEmployee(Employee employee);
+
     /**
      * 列出所有的员工
      * @return

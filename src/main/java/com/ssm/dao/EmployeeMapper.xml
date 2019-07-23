@@ -36,6 +36,26 @@
               inner join dept
               on d_id = dept_id
     </sql>
+    <!-- 修改员工信息 -->
+    <update id="updateEmployee" parameterType="Employee">
+        update
+              emp
+              <set>
+                  <if test="empName != null and empName != '' ">
+                        emp_name = #{empName},
+                  </if>
+                  <if test="gender != null and gender != '' ">
+                        gender = #{gender},
+                  </if>
+                  <if test="email != null and email != '' ">
+                        email = #{email}
+                  </if>
+                  <if test="dId != null and dId != '' ">
+                      d_id = #{dId}
+                  </if>
+              </set>
+    </update>
+
     <!-- 查看用户名或邮箱是否存在 -->
     <select id="checkUserOrEmail" resultType="int">
         select
@@ -55,7 +75,7 @@
         <include refid="listEmployee"/>
     </select>
     <!-- 通过员工 id 来获取用户信息 -->
-    <select id="getEmployeeById" resultMap="EmployeeMap">
+    <select id="getEmployeeById" resultMap="EmpAndDept">
         <include refid="listEmployee"/>
         where emp_id=#{id}
     </select>

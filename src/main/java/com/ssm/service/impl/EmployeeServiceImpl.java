@@ -14,6 +14,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeMapper employeeMapper;
 
     @Override
+    public Employee getEmployeeById(Integer id) {
+        return employeeMapper.getEmployeeById(id);
+    }
+
+    @Transactional
+    @Override
+    public boolean updateEmployee(Employee employee) {
+
+        return false;
+    }
+
+    @Override
     public boolean checkUserOrEmail(Employee employee) {
         int count  = employeeMapper.checkUserOrEmail(employee);
         return count == 0;

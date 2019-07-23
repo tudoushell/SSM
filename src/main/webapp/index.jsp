@@ -388,6 +388,15 @@
     $(document).on("click", ".editor-btn", function () {
         listDept("#list-dept")
         var deptId = $(this).parent().parent().children(":first").text()
+        //获取员工信息
+        $.ajax({
+            type: "GET",
+            url: "/emp/" + deptId,
+            dataType: "json",
+            success: function (result) {
+                
+            }
+        })
         //设置弹窗属性
         $('#edit_emp_info').modal({
             backdrop: 'static'
