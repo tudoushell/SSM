@@ -31,19 +31,13 @@
                 </div>
                 <div class="modal-body">
                     <form>
-<%--                        <div class="form-group">--%>
-<%--                            <label class="col-sm-2 control-label">姓名</label>--%>
-<%--                            <div class="col-sm-10">--%>
-<%--                                <p class="form-control-static">email@example.com</p>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
                         <div class="form-group">
                             <label for="emp-name">姓名</label>
-                            <p type="text" id="edit-emp-name" name="empName">asdfas</p>
+                            <p type="text" id="edit-emp-name" name="empName"></p>
                         </div>
                         <div class="form-group">
                             <label for="input-email">Email</label>
-                            <input type="email" class="form-control"  name="email" placeholder="Email">
+                            <input type="email" class="form-control" id="edit-emp-email"  name="email" placeholder="Email">
                             <span class="help-block"></span>
                         </div>
                         <div class="form-group">
@@ -215,7 +209,7 @@
         });
         $('tbody').append(htmlStr);
     }
-    
+    var currentPage
     function listPage(result) {
         $('#pageInfo').children().empty()
         $('#navigation').children().empty()
@@ -227,7 +221,7 @@
         htmlStr += "总共<span class=\"label label-default\">" + pageInfo.total + "</span>条记录"
         htmlStr += "</div>"
         $('#pageInfo').append(htmlStr);
-
+        currentPage = pageInfo.pageNum
         //分页页码
         var pagination = "<nav aria-label=\"Page navigation\" >"
         pagination += "<ul class='pagination'>"
@@ -384,17 +378,22 @@
             }
         })
     }
+    var empId;
     //修改员工信息部分
     $(document).on("click", ".editor-btn", function () {
         listDept("#list-dept")
-        var deptId = $(this).parent().parent().children(":first").text()
+        validateMsg("#edit-emp-email", "success", "")
+        empId = $(this).parent().parent().children(":first").text()
         //获取员工信息
         $.ajax({
             type: "GET",
-            url: "/emp/" + deptId,
+            url: "/emp/" + empId,
             dataType: "json",
-            success: function (result) {
-                
+            success: function (result) { //点击将员工信息映射到页面上
+                $('#edit-emp-name').text(result.resultMap.emp.empName)
+                $('#edit-emp-email').val(result.resultMap.emp.email)
+                $('#edit_emp_info input[name=gender]').val([result.resultMap.emp.gender])
+                $('#edit_emp_info select').val([result.resultMap.emp.dept.deptId]);
             }
         })
         //设置弹窗属性
@@ -402,6 +401,33 @@
             backdrop: 'static'
         })
     })
+    $('#update-emp').click(function () {
+        //邮箱校验
+        var email = $('#edit-emp-email').val()
+        reg = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
+        if (reg.test(email)){
+            validateMsg("#edit-emp-email", "success", "")
+        }else {
+            validateMsg("#edit-emp-email", "error", "邮箱格式不正确")
+        }
+        //员工信息更新
+        $.ajax({
+            type: "PUT",
+            url: "/emp/" + empId,
+            data: $('#edit_emp_info form').serialize(),
+            success: function (result) {
+                if (result.code === "200"){
+                    $('#edit-info').fadeIn(700,function () {
+                        $('#edit-info').fadeOut(700,function () {
+                            pagination(currentPage)              //更新页面
+                            $('#edit_emp_info').modal('hide')   //关闭弹窗
+                        })
+                    })
+                }
+            }
+        })
+    })
+
 </script>
 </body>
 </html>

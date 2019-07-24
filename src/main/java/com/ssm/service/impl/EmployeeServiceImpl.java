@@ -20,9 +20,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
-    public boolean updateEmployee(Employee employee) {
-
-        return false;
+    public void updateEmployee(Employee employee) {
+        employeeMapper.updateEmployee(employee);
     }
 
     @Override

@@ -48,12 +48,13 @@
                         gender = #{gender},
                   </if>
                   <if test="email != null and email != '' ">
-                        email = #{email}
+                        email = #{email},
                   </if>
                   <if test="dId != null and dId != '' ">
                       d_id = #{dId}
                   </if>
               </set>
+              where emp_id = #{empId}
     </update>
 
     <!-- 查看用户名或邮箱是否存在 -->

@@ -18,7 +18,7 @@ public interface EmployeeService {
      * @param employee
      * @return
      */
-    boolean updateEmployee(Employee employee);
+    void updateEmployee(Employee employee);
 
     /**
      * 查询用户名和邮箱是否存在

@@ -24,6 +24,28 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     /**
+     * tomcat 不支持 put 请求，
+     * 可以配置hiddenHttpMethodFilter可以对put进行过滤
+     * 但请求参数的必须加中_method=PUT
+     *
+     * spring 提供一个类 可以支持put请求
+     * org.springframework.web.filter.FormContentFilter
+     * 在web.xml 中进行配置
+     *
+     *
+     * 更新员工信息
+     * @param employee
+     * @return
+     */
+    @ResponseBody
+    @PutMapping("/emp/{empId}")
+    public Msg updateEmp(Employee employee){
+        System.out.println(employee);
+        employeeService.updateEmployee(employee);
+        return Msg.sucess();
+    }
+
+    /**
      * 获取员工信息
      * @param id
      * @return
