@@ -36,6 +36,11 @@
               inner join dept
               on d_id = dept_id
     </sql>
+    <!-- 删除员工信息 -->
+    <delete id="delEmployee">
+        delete from emp
+               where emp_id = #{empId}
+    </delete>
     <!-- 修改员工信息 -->
     <update id="updateEmployee" parameterType="Employee">
         update

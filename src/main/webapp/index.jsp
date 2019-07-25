@@ -201,7 +201,7 @@
            htmlStr += "<button class=\"btn btn-success btn-sm editor-btn\">"
            htmlStr += "<span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>"
            htmlStr +=  " 修改</button> "
-           htmlStr += "<button class=\"btn btn-danger btn-sm\">"
+           htmlStr += "<button class=\"btn btn-danger btn-sm del-btn\">"
            htmlStr += "<span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span>"
            htmlStr +=  " 删除</button>"
            htmlStr += "</td>"
@@ -401,6 +401,7 @@
             backdrop: 'static'
         })
     })
+    //员工信息修改
     $('#update-emp').click(function () {
         //邮箱校验
         var email = $('#edit-emp-email').val()
@@ -427,6 +428,25 @@
             }
         })
     })
+
+    //员工删除
+    $(document).on("click", ".del-btn", function () {
+        let empId = $(this).parent().parent().children(":first-child").text()
+        let empName = $(this).parent().parent().children().eq(1).text()
+        if (confirm("是否删除" + empName)){
+            $.ajax({
+                type: "delete",
+                url: "/emp/" + empId,
+                success: function (result) {
+                    alert(result.msg)
+                    pagination(currentPage)
+                }
+            })
+        }
+    })
+
+    //员工批量删除
+
 
 </script>
 </body>

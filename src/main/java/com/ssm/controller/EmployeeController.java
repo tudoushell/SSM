@@ -23,6 +23,19 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+
+    /**
+     * 删除员工
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/emp/{id}")
+    public Msg delEmp(@PathVariable("id") Integer id){
+        employeeService.delEmployee(id);
+        return Msg.sucess();
+    }
+
     /**
      * tomcat 不支持 put 请求，
      * 可以配置hiddenHttpMethodFilter可以对put进行过滤

@@ -7,6 +7,12 @@ import java.util.List;
 public interface EmployeeService {
 
     /**
+     * 删除员工
+     * @param empId
+     */
+    void delEmployee(Integer empId);
+
+    /**
      * 根据id 获取员工信息
      * @param id
      * @return

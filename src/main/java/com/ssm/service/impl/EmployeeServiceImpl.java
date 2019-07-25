@@ -13,6 +13,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    @Transactional
+    @Override
+    public void delEmployee(Integer empId) {
+        employeeMapper.delEmployee(empId);
+    }
+
     @Override
     public Employee getEmployeeById(Integer id) {
         return employeeMapper.getEmployeeById(id);
