@@ -135,7 +135,7 @@
     <div class="row">
         <div class="col-md-6 col-xs-6 col-md-offset-10">
             <button class="btn btn-success" id="add_emp" data-toggle="modal">新增</button>
-            <button class="btn btn-danger">删除</button>
+            <button class="btn btn-danger" id="del_more_emp">删除</button>
         </div>
     </div>
     <!-- 员工信息 -->
@@ -143,6 +143,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th><input type="checkbox" id="choose_all_emp"></th>
                 <th>#</th>
                 <th>姓名</th>
                 <th>性别</th>
@@ -188,6 +189,7 @@
         var htmlStr = ""
         $.each(emps, function (index,emp) {
            htmlStr += "<tr>";
+           htmlStr += "<td><input type='checkbox' class='emp_choose'></td>"
            htmlStr += "<td>" + emp.empId + "</td>"
            htmlStr += "<td>" + emp.empName + "</td>"
             if (emp.gender === "0"){
@@ -383,7 +385,7 @@
     $(document).on("click", ".editor-btn", function () {
         listDept("#list-dept")
         validateMsg("#edit-emp-email", "success", "")
-        empId = $(this).parent().parent().children(":first").text()
+        empId = $(this).parents("tr").children("td:eq(1)").text()
         //获取员工信息
         $.ajax({
             type: "GET",
@@ -431,8 +433,8 @@
 
     //员工删除
     $(document).on("click", ".del-btn", function () {
-        let empId = $(this).parent().parent().children(":first-child").text()
-        let empName = $(this).parent().parent().children().eq(1).text()
+        let empId = $(this).parents("tr").children("td:eq(1)").text()
+        let empName = $(this).parent().parent().children().eq(2).text()
         if (confirm("是否删除" + empName)){
             $.ajax({
                 type: "delete",
@@ -444,9 +446,42 @@
             })
         }
     })
+    //选择全部或者不选择全部
+    $('#choose_all_emp').click(function () {
+        $('.emp_choose').attr("checked",  $(this).prop("checked"))
 
+    })
+
+    $(document).on("click", ".emp_choose", function () {
+       if ($('.emp_choose:checked').length === 5){
+           $('#choose_all_emp').attr("checked", true)
+        }else {
+           $('#choose_all_emp').attr("checked", false)
+       }
+    })
+    
     //员工批量删除
-
+    $('#del_more_emp').click(function () {
+        let ids = []
+        let index = 0
+        let empNames = ""
+        $.each($('.emp_choose:checked'), function () {
+            ids[index++] = $(this).parents("tr").children('td').eq(1).text()
+            empNames += $(this).parents("tr").children('td').eq(2).text() + " "
+        })
+        if (confirm("是否删除" + empNames)) {
+            $.ajax({
+                type: "delete",
+                url: "/emp/" + ids,
+                success: function (result) {
+                    if (result.code === "200"){
+                        alert(result.msg)
+                        pagination(currentPage)
+                    }
+                }
+            })
+        }
+    });
 
 </script>
 </body>

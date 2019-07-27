@@ -7,6 +7,12 @@ import java.util.List;
 public interface EmployeeService {
 
     /**
+     * 批量删除员工
+     * @param ids
+     */
+    void delEmps(List<Integer> ids);
+
+    /**
      * 删除员工
      * @param empId
      */

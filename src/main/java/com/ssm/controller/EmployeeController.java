@@ -12,10 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Controller
@@ -23,18 +20,30 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    /**
+     * 批量删除员工
+     * @param ids
+     * @return
+     */
+    @ResponseBody
+    @DeleteMapping("/emp/{ids}")
+    public Msg delEmps(@PathVariable("ids") Integer[] ids){
+        List<Integer> idList = Arrays.asList(ids);
+        employeeService.delEmps(idList);
+        return Msg.sucess();
+    }
 
     /**
      * 删除员工
      * @param id
      * @return
      */
-    @ResponseBody
-    @DeleteMapping("/emp/{id}")
-    public Msg delEmp(@PathVariable("id") Integer id){
-        employeeService.delEmployee(id);
-        return Msg.sucess();
-    }
+//    @ResponseBody
+//    @DeleteMapping("/emp/{id}")
+//    public Msg delEmp(@PathVariable("id") Integer id){
+//        employeeService.delEmployee(id);
+//        return Msg.sucess();
+//    }
 
     /**
      * tomcat 不支持 put 请求，

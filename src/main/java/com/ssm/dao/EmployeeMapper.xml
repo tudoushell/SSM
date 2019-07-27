@@ -36,6 +36,15 @@
               inner join dept
               on d_id = dept_id
     </sql>
+
+    <delete id="delEmps" parameterType="list">
+        delete from emp
+                where emp_id in
+                <foreach collection="list" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+    </delete>
+
     <!-- 删除员工信息 -->
     <delete id="delEmployee">
         delete from emp

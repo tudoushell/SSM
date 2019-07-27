@@ -6,6 +6,11 @@ import java.util.List;
 
 public interface EmployeeMapper {
 
+    /**
+     * 批量删除员工
+     * @param empIds
+     */
+    void delEmps(List<Integer> empIds);
 
     /**
      * 删除员工

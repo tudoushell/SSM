@@ -15,6 +15,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional
     @Override
+    public void delEmps(List<Integer> ids) {
+        employeeMapper.delEmps(ids);
+    }
+
+    @Transactional
+    @Override
     public void delEmployee(Integer empId) {
         employeeMapper.delEmployee(empId);
     }
